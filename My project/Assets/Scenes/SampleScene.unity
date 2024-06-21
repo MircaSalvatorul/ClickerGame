@@ -1832,7 +1832,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1655629991}
         m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
-        m_MethodName: BuyClickUp2
+        m_MethodName: BuyProdUp2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1925,7 +1925,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1655629989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfa83a02cfc21134ea0ffa0959ee9f21, type: 3}
+  m_Script: {fileID: 11500000, guid: d1b350614f9d8fd4d96776be44acbbe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   coinsText: {fileID: 307830686}
@@ -1938,8 +1938,10 @@ MonoBehaviour:
   clickup2Text: {fileID: 2031319655}
   clickUpgrade1Cost: 0
   clickUpgrade1Level: 0
+  clickUpgrade1Power: 0
   prodUpgrade1Cost: 0
   prodUpgrade1Level: 0
+  prodUpgrade1Power: 0
   produp1Text: {fileID: 447478492}
   produp2Text: {fileID: 268193834}
   clickUpgrade2Cost: 0

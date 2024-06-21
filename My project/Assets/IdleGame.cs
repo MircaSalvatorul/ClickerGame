@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using static System.Math;
 
 public class IdleGame : MonoBehaviour
 {
@@ -10,18 +11,20 @@ public class IdleGame : MonoBehaviour
     public double coins;
     public double cps;
 
-    public double coinsClickValue=1;
+    public double coinsClickValue = 1;
     //Upgrades Text, part 1
 
     public TMP_Text clickup1Text;
     public TMP_Text clickup2Text;
-    
+
 
     public double clickUpgrade1Cost;
-    public double clickUpgrade1Level;
+    public int clickUpgrade1Level;
+    public double clickUpgrade1Power;
 
     public double prodUpgrade1Cost;
-    public double prodUpgrade1Level;
+    public int prodUpgrade1Level;
+    public double prodUpgrade1Power;
 
     //Even more upgrades
 
@@ -40,29 +43,55 @@ public class IdleGame : MonoBehaviour
     public void Start()
     {
         clickUpgrade1Cost = 20;
+        clickUpgrade1Power = 1;
         prodUpgrade1Cost = 30;
+        prodUpgrade1Power = 1;
         clickUpgrade2Cost = 100;
+        clickUpgrade2Power = 5;
         prodUpgrade2Cost = 100;
         prodUpgrade2Power = 5;
     }
 
+    //Methods
+    public void ClickText(TMP_Text Text, double Cost, int Level, double Power)
+    {
+        Text.text = "Click Upgrade \nCost:" + Cost.ToString("F2") + "\nPower +" + Power + "\nLevel: " + Level;
+    }
+
+    public void ProdText(TMP_Text Text, double cost, int Level, double Power)
+    {
+        Text.text = "Production Upgrade \nCost:" + cost.ToString("F2") + "\nPower +" + Power + "\nLevel: " + Level;
+    }
+
+    public void Notatii(TMP_Text textValue, double numericValue)
+    {
+        if (numericValue > 1000)
+        {
+            var exponent = Floor(Log10(Abs(numericValue)));
+            var mantissa = numericValue / Pow(10, exponent);
+            textValue.text = "Coins: " + mantissa.ToString("F2") + "e" + exponent;
+        }
+        else
+        {
+            textValue.text = "Coins" + numericValue.ToString("F2");
+        }
+    }
 
 
     // Update is called once per frame
     public void Update()
     {
-        clickValueText.text = "Click\n+" + coinsClickValue + " Coins";
+        clickValueText.text = "Click\n" + coinsClickValue + " Coins";
         cps = prodUpgrade1Level + (prodUpgrade2Power * prodUpgrade2Level);
-        cpsText.text = cps + " /s";
+        cpsText.text = cps + "/s";
 
-        coinsText.text = "Coins: " + coins.ToString("F2");
+        Notatii(coinsText, coins);
 
-        clickup1Text.text = "Click Upgrade 1\nCost:" + clickUpgrade1Cost.ToString("F2") + "\nPower +1\nLevel: " +clickUpgrade1Level;
-        clickup2Text.text = "Click Upgrade 2\nCost:" + clickUpgrade2Cost.ToString("F2") + "\nPower +5\nLevel: " + clickUpgrade2Level;
+        ClickText(clickup1Text, clickUpgrade1Cost, clickUpgrade1Level, clickUpgrade1Power);
+        ClickText(clickup2Text, clickUpgrade2Cost, clickUpgrade2Level, clickUpgrade2Power);
 
-        produp1Text.text = "Production Upgrade 1\nCost:" + prodUpgrade1Cost.ToString("F2") + "\nPower +1\nLevel: "+ prodUpgrade1Level;
-        produp2Text.text = "Production Upgrade 2\nCost:" + prodUpgrade2Cost.ToString("F2") + "\nPower +" + prodUpgrade2Power + "\nLevel: " + prodUpgrade2Level;
-
+        ProdText(produp1Text, prodUpgrade1Cost, prodUpgrade1Level, prodUpgrade1Power);
+        ProdText(produp2Text, prodUpgrade2Cost, prodUpgrade2Level, prodUpgrade2Power);
 
         coins += cps * Time.deltaTime;
     }
@@ -71,19 +100,20 @@ public class IdleGame : MonoBehaviour
     //Buttons
     public void Click()
     {
-        coins+= coinsClickValue;
+        coins += coinsClickValue;
     }
 
     public void BuyClickUp1()
     {
-        if (coins >= clickUpgrade1Cost) {
+        if (coins >= clickUpgrade1Cost)
+        {
             clickUpgrade1Level++;
             coins -= clickUpgrade1Cost;
             clickUpgrade1Cost *= 1.07;
             coinsClickValue++;
         }
 
-        
+
     }
 
     public void BuyClickUp2()
