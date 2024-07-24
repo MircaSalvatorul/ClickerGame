@@ -42,17 +42,11 @@ public class IdleGame : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        clickUpgrade1Cost = 20;
-        clickUpgrade1Power = 1;
-        prodUpgrade1Cost = 30;
-        prodUpgrade1Power = 1;
-        clickUpgrade2Cost = 100;
-        clickUpgrade2Power = 5;
-        prodUpgrade2Cost = 100;
-        prodUpgrade2Power = 5;
+        Load();
     }
 
     //Methods
+
     public void ClickText(TMP_Text Text, double Cost, int Level, double Power)
     {
         Text.text = "Click Upgrade \nCost:" + Cost.ToString("F2") + "\nPower +" + Power + "\nLevel: " + Level;
@@ -77,6 +71,46 @@ public class IdleGame : MonoBehaviour
         }
     }
 
+    //Saving methods
+
+    public void Load() 
+    {
+        coins = double.Parse(PlayerPrefs.GetString("coins", "0"));
+        clickUpgrade1Cost = double.Parse(PlayerPrefs.GetString("clickUpgrade1Cost", "20"));
+        clickUpgrade1Power = double.Parse(PlayerPrefs.GetString("clickUpgrade1Power", "1"));
+        prodUpgrade1Cost = double.Parse(PlayerPrefs.GetString("prodUpgrade1Cost", "30"));
+        prodUpgrade1Power = double.Parse(PlayerPrefs.GetString("prodUpgrade1Power", "1"));
+        clickUpgrade2Cost = double.Parse(PlayerPrefs.GetString("clickUpgrade2Cost", "100"));
+        clickUpgrade2Power = double.Parse(PlayerPrefs.GetString("clickUpgrade2Power", "5"));
+        prodUpgrade2Cost = double.Parse(PlayerPrefs.GetString("prodUpgrade2Cost", "100"));
+        prodUpgrade2Power = double.Parse(PlayerPrefs.GetString("prodUpgrade2Power", "5"));
+
+
+        prodUpgrade2Level = PlayerPrefs.GetInt("prodUpgrade2Level", 0);
+        prodUpgrade1Level = PlayerPrefs.GetInt("prodUpgrade1Level", 0);
+        clickUpgrade1Level = PlayerPrefs.GetInt("clickUpgrade1Level", 0);
+        clickUpgrade2Level = PlayerPrefs.GetInt("clickUpgrade2Level", 0);
+    }
+
+    public void Save()
+    {
+        PlayerPrefs.SetString("coins", coins.ToString());
+        PlayerPrefs.SetString("clickUpgrade1Cost", clickUpgrade1Cost.ToString());
+        PlayerPrefs.SetString("clickUpgrade1Power", clickUpgrade1Power.ToString());
+        PlayerPrefs.SetString("prodUpgrade1Cost", prodUpgrade1Cost.ToString());
+        PlayerPrefs.SetString("prodUpgrade1Power", prodUpgrade1Power.ToString());
+        PlayerPrefs.SetString("clickUpgrade2Cost", clickUpgrade2Cost.ToString());
+        PlayerPrefs.SetString("clickUpgrade2Power", clickUpgrade2Power.ToString());
+        PlayerPrefs.SetString("prodUpgrade2Cost", prodUpgrade2Cost.ToString());
+        PlayerPrefs.SetString("prodUpgrade2Power", prodUpgrade2Power.ToString());
+
+        PlayerPrefs.SetInt("prodUpgrade1Level", prodUpgrade1Level);
+        PlayerPrefs.SetInt("prodUpgrade2Level", prodUpgrade2Level);
+        PlayerPrefs.SetInt("clickUpgrade1Level", clickUpgrade1Level);
+        PlayerPrefs.SetInt("clickUpgrade2Level", clickUpgrade2Level);
+    }
+
+
 
     // Update is called once per frame
     public void Update()
@@ -94,6 +128,7 @@ public class IdleGame : MonoBehaviour
         ProdText(produp2Text, prodUpgrade2Cost, prodUpgrade2Level, prodUpgrade2Power);
 
         coins += cps * Time.deltaTime;
+        Save();
     }
 
 
