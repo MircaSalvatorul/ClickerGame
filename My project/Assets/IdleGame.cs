@@ -39,6 +39,26 @@ public class IdleGame : MonoBehaviour
     public int prodUpgrade2Level;
     public double prodUpgrade2Power;
 
+    //Prestige Resources
+    public TMP_Text gemsText;
+    public TMP_Text gemBoostText;
+    public TMP_Text gemGetText;
+
+    public double gems;
+    public double gemBoost;
+    public double gemGet;
+
+    public void GemText()
+    {
+        gemGet = (150 * System.Math.Sqrt(coins / 1e7));
+        gemBoost = (gems * 0.05) + 1;
+
+
+        gemGetText.text = "Prestige: \n+" + System.Math.Floor(gemGet).ToString("F0") + " Gems";
+        gemsText.text = "Gems: " + System.Math.Floor(gems).ToString("F0");
+        gemBoostText.text = gemBoost.ToString("F2") + "x boost";
+    }
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -54,7 +74,7 @@ public class IdleGame : MonoBehaviour
 
     public void ProdText(TMP_Text Text, double cost, int Level, double Power)
     {
-        Text.text = "Production Upgrade \nCost:" + cost.ToString("F2") + "\nPower +" + Power + "\nLevel: " + Level;
+        Text.text = "Production Upgrade \nCost:" + cost.ToString("F2") + "\nPower +" + (Power * gemBoost).ToString("F2") + "\nLevel: " + Level;
     }
 
     public void Notatii(TMP_Text textValue, double numericValue)
@@ -67,15 +87,43 @@ public class IdleGame : MonoBehaviour
         }
         else
         {
-            textValue.text = "Coins" + numericValue.ToString("F2");
+            textValue.text = "Coins " + numericValue.ToString("F2");
         }
     }
+
+    //Prestige method
+    public void Prestige()
+    {
+        if (coins >= 1000)
+        {
+            coins = 0;
+            coinsClickValue = 1;
+            clickUpgrade1Cost = 10;
+            clickUpgrade1Power = 1;
+            prodUpgrade1Cost = 30;
+            prodUpgrade1Power = 1;
+            clickUpgrade2Cost = 100;
+            clickUpgrade2Power = 5;
+            prodUpgrade2Cost = 100;
+            prodUpgrade2Power = 5;
+
+
+            prodUpgrade2Level = 0;
+            prodUpgrade1Level = 0;
+            clickUpgrade1Level = 0;
+            clickUpgrade2Level = 0;
+            gems += gemGet;
+        }
+    }
+
 
     //Saving methods
 
     public void Load() 
     {
         coins = double.Parse(PlayerPrefs.GetString("coins", "0"));
+        gems = double.Parse(PlayerPrefs.GetString("gems", "0"));
+        coinsClickValue = double.Parse(PlayerPrefs.GetString("coinsClickValue", "1"));
         clickUpgrade1Cost = double.Parse(PlayerPrefs.GetString("clickUpgrade1Cost", "20"));
         clickUpgrade1Power = double.Parse(PlayerPrefs.GetString("clickUpgrade1Power", "1"));
         prodUpgrade1Cost = double.Parse(PlayerPrefs.GetString("prodUpgrade1Cost", "30"));
@@ -95,6 +143,8 @@ public class IdleGame : MonoBehaviour
     public void Save()
     {
         PlayerPrefs.SetString("coins", coins.ToString());
+        PlayerPrefs.SetString("gems", gems.ToString());
+        PlayerPrefs.SetString("coinsClickValue", coinsClickValue.ToString());
         PlayerPrefs.SetString("clickUpgrade1Cost", clickUpgrade1Cost.ToString());
         PlayerPrefs.SetString("clickUpgrade1Power", clickUpgrade1Power.ToString());
         PlayerPrefs.SetString("prodUpgrade1Cost", prodUpgrade1Cost.ToString());
@@ -116,8 +166,8 @@ public class IdleGame : MonoBehaviour
     public void Update()
     {
         clickValueText.text = "Click\n" + coinsClickValue + " Coins";
-        cps = prodUpgrade1Level + (prodUpgrade2Power * prodUpgrade2Level);
-        cpsText.text = cps + "/s";
+        cps = (prodUpgrade1Level + (prodUpgrade2Power * prodUpgrade2Level)) *gemBoost;
+        cpsText.text = cps.ToString("F2") + "/s";
 
         Notatii(coinsText, coins);
 
@@ -127,6 +177,7 @@ public class IdleGame : MonoBehaviour
         ProdText(produp1Text, prodUpgrade1Cost, prodUpgrade1Level, prodUpgrade1Power);
         ProdText(produp2Text, prodUpgrade2Cost, prodUpgrade2Level, prodUpgrade2Power);
 
+        GemText();
         coins += cps * Time.deltaTime;
         Save();
     }
